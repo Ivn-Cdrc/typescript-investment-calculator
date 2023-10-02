@@ -2,6 +2,13 @@ import React from 'react';
 import logo from './assets/investment-calculator-logo.png';
 import './App.css';
 
+// TODO:
+// - split the jsx code and overall app into components
+// - handle submit and reset button click events
+// - manage state. Identify the different pieces of state I might want to manage
+// - output results conditionally. make sure the table is output conditionally
+// - styling
+
 function App() {
   const calculateHandler = (userInput: any) => {
     // Should be triggered when form is submitted
