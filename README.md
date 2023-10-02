@@ -1,1 +1,0 @@
-# typescript-investment-calculator
