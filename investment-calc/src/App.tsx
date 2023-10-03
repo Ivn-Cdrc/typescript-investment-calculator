@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
-import Header from './components/Header/Header';
-import UserInput from './components/UserInput/UserInput';
-import ResultsTable from './components/ResultsTable/ResultsTable';
-import { UserInputData } from './components/UserInput/UserInput';
+import Header from "./components/Header/Header";
+import UserInput from "./components/UserInput/UserInput";
+import ResultsTable from "./components/ResultsTable/ResultsTable";
+import { UserInputData } from "./components/UserInput/UserInput";
 
 // TODO:
 // - split the jsx code and overall app into components
@@ -22,16 +22,22 @@ export interface YearlyData {
 
 function App() {
   const [userInput, setUserInput] = useState<UserInputData | null>(null);
+  const [isReset, setIsReset] = useState<boolean>(true);
 
   // triggered when the form is submitted
   function calculateHandler(userInput: UserInputData) {
     setUserInput(userInput);
+    setIsReset(false);
+  }
+
+  function resetHandler() {
+    setIsReset(true);
   }
 
   const results: YearlyData[] = []; // per-year results
 
   if (userInput) {
-    let currentSavings: number = userInput.currentSavings; 
+    let currentSavings: number = userInput.currentSavings;
     const yearlyContribution: number = userInput.yearlyContribution;
     const expectedReturn: number = userInput.expectedReturn / 100;
     const duration: number = userInput.duration;
@@ -45,8 +51,8 @@ function App() {
         year: i + 1,
         yearlyInterest: yearlyInterest,
         savingsEndOfYear: currentSavings,
-        yearlyContribution: yearlyContribution
-      }
+        yearlyContribution: yearlyContribution,
+      };
       results.push(row);
     }
   }
@@ -54,10 +60,17 @@ function App() {
   return (
     <div>
       <Header />
-      <UserInput onCalculate={calculateHandler} />
+      <UserInput onCalculate={calculateHandler} onReset={resetHandler} />
 
-      {!userInput && <p>No investment calculated yet</p>}
-      {userInput && <ResultsTable data={results} initialInvestment={userInput.currentSavings} />}
+      {!userInput || isReset && (
+        <p style={{ textAlign: "center" }}>No investment calculated yet</p>
+      )}
+      {userInput && !isReset && (
+        <ResultsTable
+          data={results}
+          initialInvestment={userInput.currentSavings}
+        />
+      )}
     </div>
   );
 }

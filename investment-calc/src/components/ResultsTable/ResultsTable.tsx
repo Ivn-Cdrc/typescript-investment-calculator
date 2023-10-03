@@ -1,4 +1,5 @@
 import { YearlyData } from "../../App";
+import styles from "./ResultsTable.module.css"
 
 interface ResultsTableProps {
   data: YearlyData[];
@@ -14,7 +15,7 @@ const formatter = new Intl.NumberFormat("en-AU", {
 
 function ResultsTable({ data, initialInvestment }: ResultsTableProps) {
   return (
-    <table className="result">
+    <table className={styles.result}>
       <thead>
         <tr>
           <th>Year</th>

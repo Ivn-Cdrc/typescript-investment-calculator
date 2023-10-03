@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, useState } from "react";
+import styles from './UserInput.module.css'
 
 export interface UserInputData {
 	currentSavings: number;
@@ -9,6 +10,7 @@ export interface UserInputData {
 
 interface UserInputProps {
   onCalculate: (userInput: UserInputData) => void;
+  onReset: () => void;
 }
 
 const initialUserInput: UserInputData = {
@@ -18,7 +20,7 @@ const initialUserInput: UserInputData = {
 	duration: 10
 }
 
-function UserInput({onCalculate}: UserInputProps) {
+function UserInput({onCalculate, onReset}: UserInputProps) {
 	const [userInput, setUserInput] = useState<UserInputData>(initialUserInput);
 
   function submitHandler(event: FormEvent<HTMLFormElement>) {
@@ -29,20 +31,21 @@ function UserInput({onCalculate}: UserInputProps) {
 
   function resetHandler(event: MouseEvent<HTMLElement>) {
     setUserInput(initialUserInput);
+    onReset();
   }
 
   function inputChangeHandler(input: string, value: string) {
 		setUserInput((prevInput: UserInputData) => {
 			return {
 				...prevInput, 
-				[input]: value
+				[input]: Number(value) // converts value: string to a number
 			};
 		});
 	}
 
   return (
-    <form onSubmit={submitHandler} className="form">
-      <div className="input-group">
+    <form onSubmit={submitHandler} className={styles.form}>
+      <div className={styles['input-group']}>
         <p>
           <label htmlFor="current-savings">Current Savings ($)</label>
           <input
@@ -66,7 +69,7 @@ function UserInput({onCalculate}: UserInputProps) {
           />
         </p>
       </div>
-      <div className="input-group">
+      <div className={styles['input-group']}>
         <p>
           <label htmlFor="expected-return">
             Expected Interest (%, per year)
@@ -92,11 +95,11 @@ function UserInput({onCalculate}: UserInputProps) {
           />
         </p>
       </div>
-      <p className="actions">
-        <button onClick={resetHandler} type="reset" className="buttonAlt">
+      <p className={styles.actions}>
+        <button onClick={resetHandler} type="reset" className={styles.buttonAlt}>
           Reset
         </button>
-        <button type="submit" className="button">
+        <button type="submit" className={styles.button}>
           Calculate
         </button>
       </p>
