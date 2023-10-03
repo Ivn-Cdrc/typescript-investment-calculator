@@ -13,7 +13,7 @@ import { UserInputData } from './components/UserInput/UserInput';
 // - output results conditionally. make sure the table is output conditionally
 // - styling
 
-interface YearlyData {
+export interface YearlyData {
   year: number;
   yearlyInterest: number;
   savingsEndOfYear: number;
@@ -30,7 +30,7 @@ function App() {
 
   const results: YearlyData[] = []; // per-year results
 
-  if (userInput != null) {
+  if (userInput) {
     let currentSavings: number = userInput.currentSavings; 
     const yearlyContribution: number = userInput.yearlyContribution;
     const expectedReturn: number = userInput.expectedReturn / 100;
@@ -55,7 +55,9 @@ function App() {
     <div>
       <Header />
       <UserInput onCalculate={calculateHandler} />
-      <ResultsTable />
+
+      {!userInput && <p>No investment calculated yet</p>}
+      {userInput && <ResultsTable data={results} initialInvestment={userInput.currentSavings} />}
     </div>
   );
 }

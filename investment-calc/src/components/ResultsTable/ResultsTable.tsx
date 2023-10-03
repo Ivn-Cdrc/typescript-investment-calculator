@@ -1,5 +1,18 @@
+import { YearlyData } from "../../App";
 
-function ResultsTable() {
+interface ResultsTableProps {
+  data: YearlyData[];
+  initialInvestment: number;
+}
+
+const formatter = new Intl.NumberFormat("en-AU", {
+  style: "currency",
+  currency: "AUD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+function ResultsTable({ data, initialInvestment }: ResultsTableProps) {
   return (
     <table className="result">
       <thead>
@@ -12,13 +25,25 @@ function ResultsTable() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>YEAR NUMBER</td>
-          <td>TOTAL SAVINGS END OF YEAR</td>
-          <td>INTEREST GAINED IN YEAR</td>
-          <td>TOTAL INTEREST GAINED</td>
-          <td>TOTAL INVESTED CAPITAL</td>
-        </tr>
+        {data.map((yearData) => (
+          <tr key={yearData.year}>
+            <td>{yearData.year}</td>
+            <td>{formatter.format(yearData.savingsEndOfYear)}</td>
+            <td>{formatter.format(yearData.yearlyInterest)}</td>
+            <td>
+              {formatter.format(
+                yearData.savingsEndOfYear -
+                  initialInvestment -
+                  yearData.yearlyContribution * yearData.year
+              )}
+            </td>
+            <td>
+              {formatter.format(
+                initialInvestment + yearData.yearlyContribution * yearData.year
+              )}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
