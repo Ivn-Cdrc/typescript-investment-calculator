@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import Header from './components/Header/Header';
 import UserInput from './components/UserInput/UserInput';
 import ResultsTable from './components/ResultsTable/ResultsTable';
+import { UserInputData } from './components/UserInput/UserInput';
 
 // TODO:
 // - split the jsx code and overall app into components
@@ -12,38 +13,48 @@ import ResultsTable from './components/ResultsTable/ResultsTable';
 // - output results conditionally. make sure the table is output conditionally
 // - styling
 
+interface YearlyData {
+  year: number;
+  yearlyInterest: number;
+  savingsEndOfYear: number;
+  yearlyContribution: number;
+}
+
 function App() {
-  const calculateHandler = (userInput: any) => {
-    // Should be triggered when form is submitted
-    // You might not directly want to bind it to the submit event on the form though...
+  const [userInput, setUserInput] = useState<UserInputData | null>(null);
 
-    const yearlyData = []; // per-year results
+  // triggered when the form is submitted
+  function calculateHandler(userInput: UserInputData) {
+    setUserInput(userInput);
+  }
 
-    let currentSavings = +userInput["current-savings"]; // feel free to change the shape of this input object!
-    const yearlyContribution = +userInput["yearly-contribution"]; // as mentioned: feel free to change the shape...
-    const expectedReturn = +userInput["expected-return"] / 100;
-    const duration = +userInput["duration"];
+  const results: YearlyData[] = []; // per-year results
+
+  if (userInput != null) {
+    let currentSavings: number = userInput.currentSavings; 
+    const yearlyContribution: number = userInput.yearlyContribution;
+    const expectedReturn: number = userInput.expectedReturn / 100;
+    const duration: number = userInput.duration;
 
     // The below code calculates yearly results (total savings, interest etc)
     for (let i = 0; i < duration; i++) {
-      const yearlyInterest = currentSavings * expectedReturn;
+      const yearlyInterest: number = currentSavings * expectedReturn;
       currentSavings += yearlyInterest + yearlyContribution;
-      yearlyData.push({
-        // feel free to change the shape of the data pushed to the array!
+
+      const row: YearlyData = {
         year: i + 1,
         yearlyInterest: yearlyInterest,
         savingsEndOfYear: currentSavings,
         yearlyContribution: yearlyContribution
-      });
+      }
+      results.push(row);
     }
-
-    // do something with yearlyData ...
-  };
+  }
 
   return (
     <div>
       <Header />
-      <UserInput />
+      <UserInput onCalculate={calculateHandler} />
       <ResultsTable />
     </div>
   );

@@ -1,10 +1,14 @@
 import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, useState } from "react";
 
-interface UserInputData {
+export interface UserInputData {
 	currentSavings: number;
 	yearlyContribution: number;
 	expectedReturn: number;
 	duration: number;
+}
+
+interface UserInputProps {
+  onCalculate: (userInput: UserInputData) => void;
 }
 
 const initialUserInput: UserInputData = {
@@ -14,12 +18,13 @@ const initialUserInput: UserInputData = {
 	duration: 10
 }
 
-function UserInput() {
+function UserInput({onCalculate}: UserInputProps) {
 	const [userInput, setUserInput] = useState<UserInputData>(initialUserInput);
 
   function submitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 		console.log(userInput);
+    onCalculate(userInput);
   }
 
   function resetHandler(event: MouseEvent<HTMLElement>) {
